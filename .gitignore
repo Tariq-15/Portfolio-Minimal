@@ -12,3 +12,10 @@ desktop.ini
 # Temporary Files
 *.tmp
 *.log
+
+# LaTeX build files
+*.aux
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
