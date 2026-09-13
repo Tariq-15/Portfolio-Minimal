@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mail Merge Script Code, Md. Tariquzzaman</title>
+  <meta name="description"
+  content="The Google Apps Script mail-merge code behind the Eid Card Mail Automation project, mail merge from Gmail drafts with variables, attachments and CC support.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+</head>
+
+<body>
+
+  <main class="essay-shell">
+
+    <div class="essay-topbar">
+      <a href="project-automate-mail.html" class="essay-back">← Back to Case Study</a>
+      <button class="essay-theme-btn" id="theme-toggle" aria-label="Toggle Theme" title="Toggle Light / Dark Mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="essay-meta">Apps Script · Mail Merge</div>
+    <h1 class="essay-title">The Code</h1>
+    <p class="code-page-intro">
+      The current version of the script from the <a href="project-automate-mail.html" class="text-link">Eid
+      Card Mail Automation</a> case study, mail merge from a Gmail draft, variables filled in from a sheet
+      row, an attachment pulled straight from a Drive link, and the CC support added when a later project
+      needed it. Runs from a custom "Send Mail" menu inside the spreadsheet itself.
+    </p>
+
+    <div class="code-file-bar">
+      <span>MailMerge.gs</span>
+      <button class="code-copy-btn" data-target="code-mailmerge">Copy</button>
+    </div>
+    <div class="code-block"><pre><code id="code-mailmerge">const RECIPIENT_COL = "Recipient";
+const CC_COL = "CC";
+const EMAIL_SENT_COL = "Email Sent";
+const ATTACHMENT_COL = "Attachment";
+
+function onOpen() {
+  const ui = SpreadsheetApp.getUi();
+  ui.createMenu('Send Mail')
+    .addItem('Send Emails', 'sendEmails')
+    .addToUi();
+}
+
+function sendEmails(subjectLine, sheet = SpreadsheetApp.getActiveSheet()) {
+  if (!subjectLine) {
+    subjectLine = Browser.inputBox("Mail Merge",
+      "Type or copy/paste the subject line of the Gmail " +
+      "draft message you would like to mail merge with:",
+      Browser.Buttons.OK_CANCEL);
+    if (subjectLine === "cancel" || subjectLine == "") {
+      return;
+    }
+  }
+
+  const emailTemplate = getGmailTemplateFromDrafts_(subjectLine);
+  const dataRange = sheet.getDataRange();
+  const data = dataRange.getDisplayValues();
+  const heads = data.shift();
+  const emailSentColIdx = heads.indexOf(EMAIL_SENT_COL);
+  const recipientColIdx = heads.indexOf(RECIPIENT_COL);
+  const ccColIdx = heads.indexOf(CC_COL); // new: CC column index
+
+  const obj = data.map(r => (heads.reduce((o, k, i) => (o[k] = r[i] || '', o), {})));
+  const out = [];
+
+  for (let i = 0; i &lt; obj.length; i++) {
+    let row = obj[i];
+
+    if (row[EMAIL_SENT_COL]) {
+      out.push([row[EMAIL_SENT_COL]]);
+      continue;
+    }
+
+    if (!row[RECIPIENT_COL]) {
+      out.push([""]);
+      continue;
+    }
+
+    try {
+      let attachments = [];
+      let driveUrl = row[ATTACHMENT_COL];
+      if (driveUrl) {
+        const matches = driveUrl.match(/[-\w]{25,}/);
+        if (matches &amp;&amp; matches.length &gt; 0) {
+          const fileId = matches[0];
+          const file = DriveApp.getFileById(fileId);
+          const blob = file.getBlob().setName(file.getName());
+          attachments.push(blob);
+        }
+      }
+
+      const msgObj = fillInTemplateFromObject_(emailTemplate.message, row);
+
+      const recipientList = row[RECIPIENT_COL].split(",").map(email => email.trim()).filter(email => email);
+      const ccList = row[CC_COL] ? row[CC_COL].split(",").map(email => email.trim()).filter(email => email) : [];
+
+      GmailApp.sendEmail(recipientList.join(","), msgObj.subject, msgObj.text, {
+        htmlBody: msgObj.html,
+        attachments: attachments,
+        cc: ccList.join(","),
+        inlineImages: emailTemplate.inlineImages
+      });
+
+      out.push([new Date()]);
+    } catch (e) {
+      out.push([e.message]);
+    }
+  }
+
+  sheet.getRange(2, emailSentColIdx + 1, out.length).setValues(out);
+}
+
+function getGmailTemplateFromDrafts_(subject_line) {
+  try {
+    const drafts = GmailApp.getDrafts();
+    const draft = drafts.filter(subjectFilter_(subject_line))[0];
+    const msg = draft.getMessage();
+
+    const allInlineImages = msg.getAttachments({ includeInlineImages: true, includeAttachments: false });
+    const attachments = msg.getAttachments({ includeInlineImages: false });
+    const htmlBody = msg.getBody();
+
+    const img_obj = allInlineImages.reduce((obj, i) => (obj[i.getName()] = i, obj), {});
+    const imgexp = RegExp('&lt;img.*?src="cid:(.*?)".*?alt="(.*?)"[^\&gt;]+&gt;', 'g');
+    const matches = [...htmlBody.matchAll(imgexp)];
+
+    const inlineImagesObj = {};
+    matches.forEach(match => inlineImagesObj[match[1]] = img_obj[match[2]]);
+
+    return {
+      message: { subject: subject_line, text: msg.getPlainBody(), html: htmlBody },
+      attachments: attachments,
+      inlineImages: inlineImagesObj
+    };
+  } catch (e) {
+    throw new Error("Oops - can't find Gmail draft");
+  }
+
+  function subjectFilter_(subject_line) {
+    return function (element) {
+      return element.getMessage().getSubject() === subject_line;
+    }
+  }
+}
+
+function fillInTemplateFromObject_(template, data) {
+  let template_string = JSON.stringify(template);
+  template_string = template_string.replace(/{{[^{}]+}}/g, key => {
+    return escapeData_(data[key.replace(/[{}]+/g, "")] || "");
+  });
+  return JSON.parse(template_string);
+}
+
+function escapeData_(str) {
+  return str
+    .replace(/[\\]/g, '\\\\')
+    .replace(/[\"]/g, '\\"')
+    .replace(/[\/]/g, '\\/')
+    .replace(/[\b]/g, '\\b')
+    .replace(/[\f]/g, '\\f')
+    .replace(/[\n]/g, '\\n')
+    .replace(/[\r]/g, '\\r')
+    .replace(/[\t]/g, '\\t');
+}</code></pre></div>
+
+    <p class="code-page-intro">
+      <strong>How it's used</strong>, a sheet holds one row per recipient, with columns for
+      <code>Recipient</code>, <code>CC</code>, <code>Attachment</code> (a Drive file link) and
+      <code>Email Sent</code>. A Gmail draft, matched by its subject line, supplies the template,
+      including any <code>{{Name}}</code>-style tokens, which get filled in per row from the matching
+      column. Running <strong>Send Mail → Send Emails</strong> from the sheet's custom menu sends every
+      unsent row and stamps a timestamp back into <code>Email Sent</code>, so re-running it is always
+      safe.
+    </p>
+
+    <hr class="essay-rule">
+
+    <div class="essay-footer">
+      <div class="essay-footer-links">
+        <a href="project-automate-mail.html" class="text-link">← Back to Case Study</a>
+        <a href="mailto:tariquzzaman01@gmail.com" class="text-link">Get in Touch ↗</a>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

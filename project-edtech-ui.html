@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ed-Tech Student App, Md. Tariquzzaman</title>
+  <meta name="description"
+  content="Case study: planning and designing ACS Future School's student app end to end, profiles, class journeys, homework submission, an in-app community and a behaviour-based gamification system.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+</head>
+
+<body>
+
+  <main class="essay-shell">
+
+    <div class="essay-topbar">
+      <a href="index.html#projects" class="essay-back">← All Projects</a>
+      <button class="essay-theme-btn" id="theme-toggle" aria-label="Toggle Theme" title="Toggle Light / Dark Mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="essay-meta">Case Study · 2024, Present</div>
+    <h1 class="essay-title">Ed-Tech Student App</h1>
+    <p class="essay-standfirst">
+      Planning and designing ACS Future School's student app end to end, profiles, class journeys,
+      homework, an in-app community and a gamification system built around good behaviour, so
+      students never had to leave the app, or rely on Facebook, to feel like they belonged in a class.
+    </p>
+
+    <div class="essay-tools-box">
+      <span class="essay-tools-box-label">Tools Used</span>
+      <div class="essay-tools-grid">
+        <div class="essay-tool-item">
+          <img src="img/tools/figma.svg" alt="Figma" class="essay-tool-icon">
+          <span class="essay-tool-name">Figma</span>
+        </div>
+        <div class="essay-tool-item">
+          <img src="img/tools/adobeillustrator.svg" alt="Adobe Illustrator" class="essay-tool-icon">
+          <span class="essay-tool-name">Illustrator</span>
+        </div>
+        <div class="essay-tool-item">
+          <img src="img/tools/adobephotoshop.svg" alt="Adobe Photoshop" class="essay-tool-icon">
+          <span class="essay-tool-name">Photoshop</span>
+        </div>
+      </div>
+    </div>
+
+    <figure class="essay-image-figure">
+      <img src="img/projects/edtech-ui/cover.jpg" alt="Screens from the ACS Future School student app: activity dashboard, homework submission, class notices, gamification points and streaks, video lessons and the in-app community feed" loading="lazy">
+      <span class="essay-image-caption">The student app surface area, activity dashboard, homework, notices, gamification and community, all planned and designed in-house.</span>
+    </figure>
+
+    <div class="essay-body">
+
+      <p>
+        I worked as Product Manager on ACS Future School's student app, the single product every
+        enrolled student was expected to actually open every day. That put ownership of the whole UI
+        on my desk, not just the feature specs. I planned the product from the ground up, profiles,
+        class structure, homework, community, gamification, then sat inside Figma myself and designed
+        most of the screens, working alongside a dedicated designer for visual polish and prototyping
+        rather than handing off a spec and waiting for it to come back.
+      </p>
+      <p>
+        This is the story of how a scattered, Facebook-dependent student experience became one app,
+        and one design system, that a student could live inside for an entire course.
+      </p>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Problem</h2>
+      <ul class="essay-list">
+        <li>A student's experience after enrolling was fragmented across a payment confirmation, a
+          Facebook group for notices, another group or Messenger thread for homework, and a
+          spreadsheet somewhere holding their scores</li>
+        <li>Facebook groups had no structure, no way to tell a graded submission from a random
+          comment, no per-student progress view, and no ownership of the data or the relationship,
+          it all lived on someone else's platform</li>
+        <li>Students had no reason to open anything daily. There was no profile to check, no streak
+          to keep, no visible reason to come back between live classes</li>
+        <li>Multiple batches and multiple courses per student meant "which class is this notice for"
+          was a constant, low-grade source of confusion inside a single shared group</li>
+      </ul>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Approach</h2>
+      <p>
+        I broke the product into four systems and planned each one as its own flow before a single
+        screen got designed, profiles, class journey, homework, community, then layered gamification
+        across all four rather than bolting it on as a separate tab.
+      </p>
+
+      <div class="essay-figure">
+        <div class="essay-flow">
+          <span class="essay-flow-step ef-blue">Profile</span>
+          <span class="essay-flow-arrow">→</span>
+          <span class="essay-flow-step ef-green">Class Journey</span>
+          <span class="essay-flow-arrow">→</span>
+          <span class="essay-flow-step ef-pink">Homework</span>
+          <span class="essay-flow-arrow">→</span>
+          <span class="essay-flow-step ef-purple">Community</span>
+        </div>
+        <span class="essay-figure-caption">Four systems, planned in sequence, unified by one gamification layer.</span>
+      </div>
+
+      <p><strong>Profiles, built for more than one class at a time.</strong> A student was rarely
+        enrolled in just one course, so the profile couldn't be a single static page. I designed it
+        as an academic profile shell that stayed constant, name, streak, total points, while the
+        activity underneath it, scores, rank, attendance, submissions, switched per enrolled batch.
+        The dashboard I designed surfaces this per-class breakdown directly, correct and wrong
+        answers, time spent, submission count, and a rank, so a student sees their own standing
+        without asking anyone.</p>
+
+      <p><strong>The class journey, as a path, not a folder.</strong> Rather than dumping video links
+        and PDFs into a single feed, I planned each class as a sequence, a video lesson, a notice
+        board scoped to that batch, and a visible progress marker through the syllabus. The video
+        player, the notice cards and the class-switcher all needed to share one visual language so
+        moving between an active lesson and a batch notice never felt like leaving the app.</p>
+
+      <p><strong>Homework submission, tied straight to the dashboard.</strong> Submitting homework
+        used to mean sending a photo into a chat and hoping someone saw it. I designed the submission
+        card around a visible deadline countdown and a single confirm action, and made sure every
+        submission fed directly back into the same activity dashboard as the profile, a submitted
+        assignment updates the student's score, accuracy and rank in the same place they already
+        check daily, instead of living in a separate, disconnected list.</p>
+
+      <p><strong>An in-app community, so Facebook stopped being the group chat.</strong> This was the
+        piece I pushed hardest for. Class notices, discussion and encouragement had been happening on
+        Facebook by default, simply because that's where students already were. I designed a feed
+        students could follow, comment on and post into without leaving the app, moderated and
+        structured the way a class group never was, and scoped to the people actually in that batch.
+        Once that existed, there was no longer a reason to route a student to an external platform to
+        feel part of a class.</p>
+
+      <p><strong>Gamification, rewarding behaviour, not just answers.</strong> The point system I
+        designed wasn't tied only to quiz scores. Points accrued for the behaviours that actually
+        keep a student enrolled and progressing, submitting homework before the deadline, attending
+        the live class, keeping a daily streak alive, and being an active, helpful voice in the
+        community feed, not just getting a question right. I designed the points balance, a
+        streak-tier ladder, a referral flow with its own promo code and reward, and a package screen
+        that let earned points offset a real purchase, so the whole system paid back into something a
+        student actually wanted, not just a number on a badge.</p>
+
+      <p>
+        Planning that layer meant sitting down with the team to define exactly which actions should
+        earn points and how much, before it ever reached a design file, so gamification reinforced
+        the behaviour we wanted, on-time submissions, real attendance, genuine participation, rather
+        than becoming a checklist students could game for free points.
+      </p>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Outcome</h2>
+      <ul class="essay-stat-list">
+        <li><strong>One app</strong>, replacing a scattered mix of Facebook groups, Messenger threads
+          and spreadsheets with a single place a student opens every day</li>
+        <li><strong>One design system</strong>, profile, class journey, homework and community sharing
+          the same components, so the product reads as one app rather than four bolted-together
+          features</li>
+        <li><strong>Homework and performance in one view</strong>, a submission updates the same
+          dashboard a student already checks for their score and rank</li>
+        <li><strong>Community brought in-house</strong>, class discussion no longer depends on a
+          platform the school doesn't control or own the data from</li>
+        <li><strong>Gamification tied to real behaviour</strong>, points earned for on-time homework,
+          attendance and community participation, not just quiz results, with a direct path back into
+          the packages students actually buy</li>
+      </ul>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">What I'd Do Differently</h2>
+      <p>
+        <em>If I started this today</em>, I'd write the point-earning rules down as a formal spec,
+        with edge cases and anti-gaming limits, before the first gamification screen was designed,
+        not alongside it. The system design was sound, but a few of the numbers moved later than they
+        should have because the rules were still being settled while the UI was already taking shape.
+      </p>
+      <p>
+        I'd also bring a small group of students with more than one active enrollment into the
+        profile design earlier. The multi-class profile was the hardest flow to get right, and their
+        version of "which class is this" would have surfaced faster than internal review did.
+      </p>
+
+    </div>
+
+    <hr class="essay-rule">
+
+    <div class="essay-footer">
+      <p>Planned and designed for ACS Future School's student app, from profile and class structure
+        through homework, community and gamification.</p>
+      <div class="essay-footer-links">
+        <a href="index.html#projects" class="text-link">← All Projects</a>
+        <a href="mailto:tariquzzaman01@gmail.com" class="text-link">Get in Touch ↗</a>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

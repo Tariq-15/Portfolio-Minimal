@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eid Card Mail Automation, Md. Tariquzzaman</title>
+  <meta name="description"
+  content="Case study: my first real automation project, an Apps Script mail merge built from Google's own documentation and Stack Overflow, that automated 10 Minute School HR's Eid card emailing.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+</head>
+
+<body>
+
+  <main class="essay-shell">
+
+    <div class="essay-topbar">
+      <a href="index.html#projects" class="essay-back">← All Projects</a>
+      <button class="essay-theme-btn" id="theme-toggle" aria-label="Toggle Theme" title="Toggle Light / Dark Mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="essay-meta">Case Study · 2021 – 2022</div>
+    <h1 class="essay-title">Eid Card Mail Automation</h1>
+    <p class="essay-standfirst">
+      My first real automation project, self-taught from Google's own documentation and Stack
+      Overflow, back before AI could write a line of it for me, and still the one I'm proudest of.
+    </p>
+
+    <div class="essay-tools-box">
+      <span class="essay-tools-box-label">Tools Used</span>
+      <div class="essay-tools-grid">
+        <div class="essay-tool-item">
+          <img src="img/tools/google-apps-script.svg" alt="Google Apps Script" class="essay-tool-icon">
+          <span class="essay-tool-name">Apps Script</span>
+        </div>
+        <div class="essay-tool-item">
+          <img src="img/tools/gmail.svg" alt="Gmail" class="essay-tool-icon">
+          <span class="essay-tool-name">Gmail</span>
+        </div>
+        <div class="essay-tool-item">
+          <img src="img/tools/google-sheets.png" alt="Google Sheets" class="essay-tool-icon">
+          <span class="essay-tool-name">Google Sheets</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="essay-tools-box">
+      <span class="essay-tools-box-label">Code</span>
+      <div class="essay-tools-grid">
+        <a href="project-automate-mail-code.html" class="essay-repo-link">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <polyline points="16 18 22 12 16 6" />
+            <polyline points="8 6 2 12 8 18" />
+          </svg>
+          <span>View the Apps Script Code →</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="essay-body">
+
+      <p>
+        Long before I called myself a Product Manager, I was the person at 10 Minute School (10MS)
+        who'd rather spend a weekend writing a script than repeat the same manual task a fourth time.
+        This is that project, and it's still the one I'm proudest of, not because it was complex, but
+        because I built it entirely on my own, at a point where "just ask an AI" wasn't an option yet.
+      </p>
+      <p>
+        It started as a small, seasonal problem. Every year around Eid, 10MS HR put together a
+        personalised Eid card for the team, and every year that meant designing each card and then
+        emailing it out by hand, one inbox at a time. I approached HR and told them I could automate
+        both halves of that job, generating the cards themselves (that's its own
+        <a href="project-image-generation.html" class="text-link">image-generation</a> story) and
+        getting them into every inbox without anyone touching Send more than once.
+      </p>
+      <p>
+        This is the story of that second half.
+      </p>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Problem</h2>
+      <ul class="essay-list">
+        <li>Sending a personalised card to every single person on the team meant either a slow,
+          manual mail-merge in an email client, or opening a fresh compose window for each name,
+          both error-prone at any real headcount</li>
+        <li>There was no reliable way to loop over a list of names and drop each one into its own
+          card and its own email without a developer sitting there doing it by hand</li>
+        <li>And there was no AI to lean on. This was 2021–22, so the only path from "I think this is
+          possible" to a working script was Google's own documentation and whatever Stack Overflow
+          threads I could find that were close enough to adapt</li>
+      </ul>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Approach</h2>
+      <p>
+        I built it in stages, each one solving the next problem the previous version exposed, rather
+        than trying to design the finished thing up front.
+      </p>
+
+      <div class="essay-figure">
+        <div class="essay-flow">
+          <span class="essay-flow-step">Bulk Send</span>
+          <span class="essay-flow-arrow">→</span>
+          <span class="essay-flow-step ef-green">Mail Merge</span>
+          <span class="essay-flow-arrow">→</span>
+          <span class="essay-flow-step ef-pink">+ Attachments</span>
+          <span class="essay-flow-arrow">→</span>
+          <span class="essay-flow-step ef-purple">+ CC / BCC</span>
+        </div>
+        <span class="essay-figure-caption">Three iterations in 2021–22, the fourth added years later, in a different project.</span>
+      </div>
+
+      <p><strong>First, just get an email out to everyone.</strong> The very first version did one
+        thing, loop over a list of addresses in a sheet and send the same message to all of them
+        through <code>GmailApp</code>. No personalisation, no attachment, just proof that a script
+        running from a spreadsheet could reliably reach every inbox on the list.</p>
+
+      <p><strong>Then, make it personal.</strong> A card addressed to "Dear Employee" defeats the
+        point of a personalised Eid card. The second version pulled a Gmail draft as the template and
+        filled in <code>{{Name}}</code>-style tokens from each row of the sheet, so the subject and
+        body reached every person with their own name in the right place, not just their own address
+        in the To field. Working out the token-replacement and escaping logic without an AI to check
+        my regex against was genuinely the hardest part of this whole project, a lot of it traces
+        back to Google's own documented mail-merge example, but adapting it and getting the edge
+        cases right was Stack Overflow and trial and error, one failed test send at a time.</p>
+
+      <p><strong>Then, attach the actual card.</strong> Once the
+        <a href="project-image-generation.html" class="text-link">image-generation side of the project</a>
+        could produce a finished card per person and drop it into Drive, the mailer needed to pick
+        that file up and attach it automatically. The third version read a Drive link straight out of
+        the sheet, pulled the file ID out of it, and attached the corresponding file to that person's
+        email, so the whole pipeline, generate the card, then mail the card, could run without anyone
+        touching a single attachment by hand.</p>
+
+      <p><strong>Recently, CC and BCC, because another project needed it.</strong> The pattern didn't
+        stay a one-off. Years later, a different project needed the same mail-merge approach, but with
+        CC recipients, so I went back into this same script and added a <code>CC</code> column,
+        splitting and trimming a comma-separated list and passing it straight into
+        <code>GmailApp.sendEmail</code> alongside the existing recipient and attachment logic. BCC
+        follows the exact same pattern, one more column, one more split, one more field on the send
+        call. The version on the code page reflects that update.</p>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Outcome</h2>
+      <ul class="essay-stat-list">
+        <li><strong>Zero manual sending</strong>, every employee's Eid card reached their inbox,
+          personalised by name, from a single "Send Mail → Send Emails" click in the sheet</li>
+        <li><strong>Safe to re-run</strong>, an "Email Sent" column stamped with a timestamp per row
+          meant running the script again never double-sent a card</li>
+        <li><strong>A pattern that outlived the project</strong>, the same script, drafts as templates,
+          {{tokens}} filled from a sheet, attachments pulled from Drive, got reused years later and
+          extended with CC support the moment another project needed it</li>
+      </ul>
+
+    </div>
+
+    <hr class="essay-rule">
+
+    <div class="essay-footer">
+      <p>Built for 10 Minute School HR's Eid card campaign, and still running, in updated form, more
+        than three years later.</p>
+      <div class="essay-footer-links">
+        <a href="index.html#projects" class="text-link">← All Projects</a>
+        <a href="mailto:tariquzzaman01@gmail.com" class="text-link">Get in Touch ↗</a>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

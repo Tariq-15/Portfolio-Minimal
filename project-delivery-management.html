@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delivery Management System, Md. Tariquzzaman</title>
+  <meta name="description"
+  content="Case study: connecting a sales platform, an admin backend and a courier's API into one Google Sheet that validates gift data and tracks fulfilment across 8,850 orders.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+</head>
+
+<body>
+
+  <main class="essay-shell">
+
+    <div class="essay-topbar">
+      <a href="index.html#projects" class="essay-back">← All Projects</a>
+      <button class="essay-theme-btn" id="theme-toggle" aria-label="Toggle Theme" title="Toggle Light / Dark Mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="essay-meta">Case Study · 2024, Present</div>
+    <h1 class="essay-title">Delivery Management System</h1>
+    <p class="essay-standfirst">
+      Connecting a sales platform, an internal admin panel and a courier's own API into one Google
+      Sheet, so a missing T-shirt size never breaks a shipment again.
+    </p>
+
+    <div class="essay-tools-box">
+      <span class="essay-tools-box-label">Tools Used</span>
+      <div class="essay-tools-grid">
+        <div class="essay-tool-item">
+          <img src="img/tools/google-apps-script.svg" alt="Google Apps Script" class="essay-tool-icon">
+          <span class="essay-tool-name">Apps Script</span>
+        </div>
+        <div class="essay-tool-item">
+          <img src="img/tools/google-sheets.png" alt="Google Sheets" class="essay-tool-icon">
+          <span class="essay-tool-name">Google Sheets</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="essay-body">
+
+      <p>
+        ACS Future School ran a course-purchase gift campaign: buy a course, receive a T-shirt, a
+        diary, or both, with the T-shirt further split by size depending on what a student had
+        bought. It reads like a small operational detail. At a few thousand orders a month, it
+        wasn't.
+      </p>
+      <p>
+        This is the story of how three separate systems, the sales platform, an internal admin
+        panel, and a courier partner's own API, ended up talking to each other through one Google
+        Sheet, and how that sheet started catching the gaps that used to break shipments before
+        they ever reached a courier.
+      </p>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Problem</h2>
+      <p>
+        Order data reached the fulfilment process from the sales platform with frequent gaps, a
+        missing delivery address, a missing or invalid T-shirt size, or an unclear gift
+        combination. A single missing field was enough to fail a shipment once it reached the
+        courier.
+      </p>
+      <p>
+        The sales platform, the internal admin panel and multiple courier providers each held only
+        part of an order's history. There was no single view of which orders were incomplete, which
+        were in transit, and which had gone missing, arrived late, or been returned, so the first
+        signal something had gone wrong was usually a customer asking where their gift was.
+      </p>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Approach</h2>
+      <p>
+        Three Google Apps Script integrations connect the sales platform, the internal admin
+        backend and a courier partner's API into a single Google Sheet acting as the operational
+        hub.
+      </p>
+
+      <div class="essay-figure">
+        <div class="essay-flow">
+          <span class="essay-flow-step ef-green">Sales Platform API</span>
+          <span class="essay-flow-arrow">→</span>
+          <span class="essay-flow-step ef-pink">Google Sheet</span>
+          <span class="essay-flow-arrow">←</span>
+          <span class="essay-flow-step ef-purple">Admin Backend</span>
+        </div>
+        <div class="essay-flow" style="margin-top: 12px;">
+          <span class="essay-flow-step ef-blue">Courier API</span>
+          <span class="essay-flow-arrow">↓</span>
+          <span class="essay-flow-step">Formula Cross-Check</span>
+          <span class="essay-flow-arrow">↓</span>
+          <span class="essay-flow-step">Resolved or Flagged</span>
+        </div>
+        <span class="essay-figure-caption">One sheet, three sources, reconciled automatically.</span>
+      </div>
+
+      <p>
+        One script pages through the sales platform's API to pull every paid order together with
+        its gift selection, T-shirt size, delivery address and contact details, de-duplicating by
+        payment ID and excluding failed or pending transactions. A second authenticates against the
+        admin backend and writes delivery-status updates back for each order directly from the
+        sheet. A third pulls the courier's own order list, including its recorded delivery address
+        and status, for cross-checking against the internal record.
+      </p>
+      <p>
+        Google Sheets formulas cross-reference the three sources to flag any order missing an
+        address or a T-shirt size, resolve the gap automatically wherever the missing value exists
+        in another source, and surface only the genuine exceptions that still need a manual look.
+      </p>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Outcome</h2>
+      <ul class="essay-stat-list">
+        <li><strong>8,850</strong> completed orders managed end to end across the campaign</li>
+        <li><strong>Validated before dispatch</strong>, gift and size combinations are checked
+          before a courier ever sees the order, instead of failing on arrival</li>
+        <li><strong>One view</strong>, delivery status across multiple courier providers tracked in
+          a single sheet</li>
+        <li><strong>Self-diagnosing</strong>, missed, late and returned deliveries are identified
+          automatically rather than through a customer complaint</li>
+      </ul>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">What I'd Do Differently</h2>
+      <p>
+        <em>If I started this today</em>, I'd design the formula-based validation in before the
+        first batch went out, rather than after the first run of failed shipments made the gaps
+        obvious. Three independent systems reconciled through one sheet turned out to be the right
+        pattern, it was just discovered under pressure rather than chosen deliberately from day
+        one.
+      </p>
+
+    </div>
+
+    <hr class="essay-rule">
+
+    <div class="essay-footer">
+      <p>Delivered for ACS Future School's course-purchase gift campaign, run entirely on Google
+        Sheets and Apps Script without a dedicated fulfilment system.</p>
+      <div class="essay-footer-links">
+        <a href="index.html#projects" class="text-link">← All Projects</a>
+        <a href="mailto:tariquzzaman01@gmail.com" class="text-link">Get in Touch ↗</a>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

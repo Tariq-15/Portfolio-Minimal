@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="TZ">
+  <rect width="512" height="512" fill="#C6FF3A"/>
+  <!-- "TZ" drawn as geometry so the mark never depends on a webfont being available. -->
+  <g fill="#070707">
+    <path d="M112 148h136v42h-47v174h-42V190h-47z"/>
+    <path d="M264 148h136v40L318 322h82v42H262v-40l82-134h-80z"/>
+  </g>
+</svg>

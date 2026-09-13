@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales CRM System, Md. Tariquzzaman</title>
+  <meta name="description"
+  content="Case study: an end-to-end Sales CRM built in Google Sheets on API-extracted data, covering more than 15,000 student records.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+</head>
+
+<body>
+
+  <main class="essay-shell">
+
+    <div class="essay-topbar">
+      <a href="index.html#projects" class="essay-back">← All Projects</a>
+      <button class="essay-theme-btn" id="theme-toggle" aria-label="Toggle Theme" title="Toggle Light / Dark Mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="essay-meta">Case Study · 2024, Present</div>
+    <h1 class="essay-title">Sales CRM System</h1>
+    <p class="essay-standfirst">
+      Building a single source of truth for 15,000+ student records inside Google Sheets,
+      without a database, and without slowing anyone down.
+    </p>
+
+    <div class="essay-tools-box">
+      <span class="essay-tools-box-label">Tools Used</span>
+      <div class="essay-tools-grid">
+        <div class="essay-tool-item">
+          <img src="img/tools/n8n.svg" alt="n8n" class="essay-tool-icon">
+          <span class="essay-tool-name">n8n</span>
+        </div>
+        <div class="essay-tool-item">
+          <img src="img/tools/adobeillustrator.svg" alt="Adobe Illustrator" class="essay-tool-icon">
+          <span class="essay-tool-name">Illustrator</span>
+        </div>
+        <div class="essay-tool-item">
+          <img src="img/tools/airtable.svg" alt="Airtable" class="essay-tool-icon">
+          <span class="essay-tool-name">Airtable</span>
+        </div>
+        <div class="essay-tool-item">
+          <img src="img/tools/claude.svg" alt="Claude" class="essay-tool-icon">
+          <span class="essay-tool-name">Claude</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="essay-body">
+
+      <p>
+        I joined ACS Future School as Product Manager, Tech at a point where enrolment data lived
+        in whichever spreadsheet, form response, or inbox someone had last touched it in. There was
+        no single place to ask "how many students enrolled this month," let alone get an answer
+        that everyone trusted.
+      </p>
+      <p>
+        This is the story of how that became one CRM, built entirely on Google Sheets and Apps
+        Script, now holding more than 15,000 records.
+      </p>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Problem</h2>
+      <p>
+        Student enrolment data was dispersed across manual records, form exports here, a
+        WhatsApp-coordinated spreadsheet there, and no unified tracking or reporting pipeline
+        connecting any of it. Nobody could see enrolment trends as they happened; by the time a
+        report was assembled by hand, the numbers were already a week stale.
+      </p>
+      <p>
+        There was no engineering team to hand this to, and no budget for a dedicated database. The
+        constraint wasn't really technical, it was that the tool had to be something the existing
+        team could actually operate day to day, without a developer on call.
+      </p>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Approach</h2>
+      <p>
+        I designed the ingestion pipeline around what the team already used, Google Forms and
+        Sheets, and layered automation underneath it rather than replacing it. Apps Script pulls
+        API-extracted enrolment data on a schedule, a de-duplication layer catches repeat entries
+        before they pollute the dataset, and live reporting dashboards sit on top, reading from the
+        same sheet everyone else already trusts.
+      </p>
+
+      <div class="essay-figure">
+        <div class="essay-flow">
+          <span class="essay-flow-step">Enrolment Forms</span>
+          <span class="essay-flow-arrow">→</span>
+          <span class="essay-flow-step">Apps Script Ingestion</span>
+          <span class="essay-flow-arrow">→</span>
+          <span class="essay-flow-step">De-duplication</span>
+          <span class="essay-flow-arrow">→</span>
+          <span class="essay-flow-step">Live Dashboard</span>
+        </div>
+        <span class="essay-figure-caption">The pipeline, end to end, no database, no engineering team.</span>
+      </div>
+
+      <p>
+        The hardest part wasn't the automation itself, Apps Script is forgiving enough for that.
+        It was resisting the urge to over-engineer a solution nobody but me would be able to
+        maintain. Every decision got measured against one question: could the next person who
+        touches this understand it in an afternoon?
+      </p>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Outcome</h2>
+      <ul class="essay-stat-list">
+        <li><strong>15,000+</strong> student records consolidated into a single, continuously current source of truth</li>
+        <li><strong>Zero</strong> manual data entry once the pipeline went live<sup>1</sup></li>
+        <li><strong>Real-time</strong> enrolment reporting, replacing a process that previously took days to assemble</li>
+      </ul>
+      <p>
+        Manual data entry has been eliminated, enrolment tracking is available in real time, and,
+        maybe more importantly, the system keeps running without me having to think about it. That
+        was always the actual goal.
+      </p>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">What I'd Do Differently</h2>
+      <p>
+        <em>If I started this today</em>, I'd introduce version history on the automation scripts
+        much earlier, the first few months of changes lived only in my memory, which is a terrible
+        place to store production logic. Everything since has a proper changelog.
+      </p>
+      <p>
+        I'd also push back sooner on the instinct to keep adding features. The CRM's biggest
+        strength turned out to be doing a small number of things reliably, not doing everything.
+      </p>
+
+    </div>
+
+    <div class="essay-footnotes">
+      <p><sup>1</sup> Aside from the occasional record that arrives outside the expected form
+        fields, those still get a human's eyes before they're merged in.</p>
+    </div>
+
+    <hr class="essay-rule">
+
+    <div class="essay-footer">
+      <p>Thanks to the ACS Future School team for trusting an all-Sheets system to do a database's job.</p>
+      <div class="essay-footer-links">
+        <a href="index.html#projects" class="text-link">← All Projects</a>
+        <a href="mailto:tariquzzaman01@gmail.com" class="text-link">Get in Touch ↗</a>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

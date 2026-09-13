@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automated Image Generation, Md. Tariquzzaman</title>
+  <meta name="description"
+  content="Case study: moving bulk certificate, ID card and report generation from Photoshop/Illustrator scripting to a Figma-based system that lays itself out around real data, including a bulk certificate run for BRAC University Computer Club.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+</head>
+
+<body>
+
+  <main class="essay-shell">
+
+    <div class="essay-topbar">
+      <a href="index.html#projects" class="essay-back">← All Projects</a>
+      <button class="essay-theme-btn" id="theme-toggle" aria-label="Toggle Theme" title="Toggle Light / Dark Mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="essay-meta">Case Study · 2022, Present</div>
+    <h1 class="essay-title">Automated Image Generation</h1>
+    <p class="essay-standfirst">
+      Certificates in bulk, ID cards, tickets, Eid greetings, or a fully generated report built over a
+      template, one capability behind all of it, and the story of outgrowing Photoshop and Illustrator
+      scripting for a system built around Figma instead.
+    </p>
+
+    <div class="essay-tools-box">
+      <span class="essay-tools-box-label">Tools Used</span>
+      <div class="essay-tools-grid">
+        <div class="essay-tool-item">
+          <img src="img/tools/figma.svg" alt="Figma" class="essay-tool-icon">
+          <span class="essay-tool-name">Figma</span>
+        </div>
+        <div class="essay-tool-item">
+          <img src="img/tools/google-sheets.png" alt="Google Sheets" class="essay-tool-icon">
+          <span class="essay-tool-name">Google Sheets</span>
+        </div>
+        <div class="essay-tool-item">
+          <img src="img/tools/adobeillustrator.svg" alt="Adobe Illustrator" class="essay-tool-icon">
+          <span class="essay-tool-name">Illustrator</span>
+        </div>
+        <div class="essay-tool-item">
+          <img src="img/tools/adobephotoshop.svg" alt="Adobe Photoshop" class="essay-tool-icon">
+          <span class="essay-tool-name">Photoshop</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="essay-tools-box">
+      <span class="essay-tools-box-label">Live Site</span>
+      <div class="essay-tools-grid">
+        <a href="https://certificate.bracucc.org/" target="_blank" rel="noopener noreferrer" class="essay-repo-link">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            <polyline points="15 3 21 3 21 9" />
+            <line x1="10" x2="21" y1="14" y2="3" />
+          </svg>
+          <span>certificate.bracucc.org ↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="essay-body">
+
+      <p>
+        Automated image generation sounds like a narrow, single-purpose trick, but it keeps showing
+        up everywhere, certificates in bulk, ID cards, event tickets, Eid greeting cards, or a fully
+        generated report built on top of a template someone already designed. Wherever the design
+        stays fixed and only the data underneath it changes, this is the same underlying problem.
+      </p>
+      <p>
+        I first solved it with Photoshop and Illustrator's own scripting, and for a while that was
+        genuinely the right call, fast to set up, and good enough for a first version. It's also the
+        tool that generated the cards behind the
+        <a href="project-automate-mail.html" class="text-link">Eid Card Mail Automation</a> project.
+        But it had a ceiling, and eventually I hit it hard enough that I rebuilt the whole approach
+        around Figma instead, which is what I still use for this today.
+      </p>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Problem</h2>
+      <p>
+        Photoshop and Illustrator scripting is reliable for exactly one thing, swapping a name and
+        swapping an image. You can technically script a shape's colour too, but keeping that
+        manageable across dozens of variants stops being worth the effort fairly quickly.
+      </p>
+      <p>
+        The real ceiling was layout that depends on the data itself. A lot of certificate and card
+        designs sit a decorative shape right beside a name, and a name is never the same width twice.
+        A script that places that shape at a fixed position gets it right for one name length and
+        wrong for almost every other one, either the shape overlaps the text, or it sits too far away
+        with an awkward gap, and there's no version of "fixed position" that solves both at once.
+      </p>
+
+      <p>
+        The same ceiling shows up again in reports. Say a template needs to show a value, 70%, as an
+        actual bar in a bar chart, not just as printed text. That means a data value has to drive a
+        visual property, a bar's height or fill, not just replace a string, and that's simply not
+        something image-editor scripting is built to express.
+      </p>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Approach</h2>
+      <p>
+        All of it turned out to be solvable with one tool, Figma, used for something well outside
+        what it's usually reached for. Two of its features did almost all of the work.
+      </p>
+      <ul class="essay-list">
+        <li><strong>Auto layout</strong>, a shape placed in the same auto-layout row as a text node
+          doesn't sit at a fixed coordinate, it hugs the text and repositions itself the moment the
+          text's actual rendered width changes</li>
+        <li><strong>Variables</strong>, text, and just as importantly numeric properties like a bar's
+          width or fill, can be bound to a value instead of hand-set, so a data value can genuinely
+          drive what the design looks like</li>
+      </ul>
+      <p>
+        Wire those to a Google Sheet acting as the data source, one row per certificate, per card, per
+        report, and the design itself becomes the template every row gets rendered through.
+      </p>
+
+      <figure class="essay-image-figure">
+        <img src="img/projects/image-generation/template.png" alt="The blank Figma certificate template with NAME, #{Position}, #{Segment} and #(Certificate ID) placeholder tokens" loading="lazy">
+        <span class="essay-image-caption">The actual template, tokens in place of real data, ready for a Sheet to drive every row through it.</span>
+      </figure>
+
+      <div class="essay-figure">
+        <div class="essay-flow">
+          <span class="essay-flow-step ef-blue">Figma Auto Layout</span>
+          <span class="essay-flow-arrow">+</span>
+          <span class="essay-flow-step ef-green">Variables from a Sheet</span>
+          <span class="essay-flow-arrow">→</span>
+          <span class="essay-flow-step ef-purple">Layout Follows the Data</span>
+        </div>
+        <span class="essay-figure-caption">The shape reads the name's real width and adjusts itself, every row, automatically.</span>
+      </div>
+
+      <p>
+        We put this to work generating certificates in bulk for the BRAC University Computer Club
+        (BUCC). Their certificate design placed a triangle directly beside the recipient's name, the
+        exact overlap-or-gap problem above, so the design went into Figma with that triangle sitting
+        in an auto-layout row next to the name text, and the name itself came from a Google Sheet with
+        one row per recipient. Every certificate generated with the triangle sitting correctly beside
+        the name, short or long, without a single manual nudge.
+      </p>
+
+      <div class="essay-image-row">
+        <figure class="essay-image-figure">
+          <img src="img/projects/image-generation/name-short.jpg" alt="Generated certificate for a short name, Ahmed Awsaf, with the triangle markers sitting tight against the text" loading="lazy">
+          <span class="essay-image-caption">A short name, "Ahmed Awsaf", triangles sitting right against the text.</span>
+        </figure>
+        <figure class="essay-image-figure">
+          <img src="img/projects/image-generation/name-long.jpg" alt="Generated certificate for a long name, Md. Ann-Am Akbar Saad, with the triangle markers still sitting tight against the text" loading="lazy">
+          <span class="essay-image-caption">A much longer name, "Md. Ann-Am Akbar Saad", same template, same tight fit.</span>
+        </figure>
+      </div>
+
+      <p>
+        Once every certificate existed as its own file, delivery reused a system I'd already built,
+        the same <a href="project-automate-mail.html" class="text-link">mail automation tool</a> from
+        the Eid card project sent each recipient their own certificate automatically, keyed off the
+        same sheet the design had just been generated from.
+      </p>
+      <p>
+        The one piece outside the image-generation system itself was a certificate validation site for
+        BUCC, so anyone could confirm a certificate was genuine. It runs at effectively zero hosting
+        cost by serving the certificate images straight out of Google Drive, from the outside there's
+        no way to tell that's where they're coming from. It's live at
+        <a href="https://certificate.bracucc.org/" target="_blank" rel="noopener noreferrer" class="text-link">certificate.bracucc.org</a>,
+        code <code>BUCC25BBP329NOU</code> pulls up a real one, though the validation site is really a
+        footnote to this project, the generation system behind it is the main story.
+      </p>
+
+      <figure class="essay-image-figure">
+        <img src="img/projects/image-generation/validation-landing.png" alt="The BUCC Certifications Corner landing page, with a field to enter a certificate ID and validate it" loading="lazy">
+        <span class="essay-image-caption">The validation site's landing page, a footnote next to the generation system, but live at certificate.bracucc.org.</span>
+      </figure>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Outcome</h2>
+      <ul class="essay-stat-list">
+        <li><strong>Layout that adapts to the data</strong>, a shape beside a name repositions itself
+          based on that name's real width, the overlap-or-gap problem is simply gone</li>
+        <li><strong>Data can drive the visual, not just the text</strong>, a value like 70% can resize
+          or fill an actual bar in a report template, not only replace a printed number</li>
+        <li><strong>One system, many outputs</strong>, certificates, ID cards, tickets, Eid greetings
+          and data-driven reports all run through the same Figma-and-Sheet approach, instead of a
+          separate one-off script per use case</li>
+        <li><strong>End to end for BUCC</strong>, certificates generated in bulk, delivered
+          automatically by the existing mail tool, and verifiable on a free, Drive-hosted validation
+          site</li>
+      </ul>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">What I'd Do Differently</h2>
+      <p>
+        <em>If I started this today</em>, I'd have called time on Photoshop and Illustrator scripting
+        sooner. I spent real effort trying to make fixed-position scripting handle text-width-aware
+        layout before accepting that the problem was never about image editing, it was a layout
+        problem, and Figma's auto layout already solved it natively. Recognising that earlier would
+        have saved months, not just a rebuild.
+      </p>
+
+    </div>
+
+    <hr class="essay-rule">
+
+    <div class="essay-footer">
+      <p>Built and still maintained as a general-purpose image-generation system, most visibly for
+        BRAC University Computer Club's certificate program.</p>
+      <div class="essay-footer-links">
+        <a href="index.html#projects" class="text-link">← All Projects</a>
+        <a href="mailto:tariquzzaman01@gmail.com" class="text-link">Get in Touch ↗</a>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

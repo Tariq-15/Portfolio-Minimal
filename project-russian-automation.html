@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Russian Vocabulary Automation, Md. Tariquzzaman</title>
+  <meta name="description"
+  content="Case study: an n8n and Puppeteer pipeline that publishes a scheduled, three-times-daily Russian-vocabulary carousel to a client's Facebook Page.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+</head>
+
+<body>
+
+  <main class="essay-shell">
+
+    <div class="essay-topbar">
+      <a href="index.html#projects" class="essay-back">← All Projects</a>
+      <button class="essay-theme-btn" id="theme-toggle" aria-label="Toggle Theme" title="Toggle Light / Dark Mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="essay-meta">Client Project · 2026, Present</div>
+    <h1 class="essay-title">Russian Vocabulary Automation</h1>
+    <p class="essay-standfirst">
+      An unattended pipeline that turns a client's Google Sheets rows into a scheduled,
+      three-times-daily Facebook carousel, no design tool, and no manual posting.
+    </p>
+
+    <div class="essay-tools-box">
+      <span class="essay-tools-box-label">Tools Used</span>
+      <div class="essay-tools-grid">
+        <div class="essay-tool-item">
+          <img src="img/tools/n8n.svg" alt="n8n" class="essay-tool-icon">
+          <span class="essay-tool-name">n8n</span>
+        </div>
+        <div class="essay-tool-item">
+          <img src="img/tools/claude.svg" alt="Claude" class="essay-tool-icon">
+          <span class="essay-tool-name">Claude</span>
+        </div>
+        <div class="essay-tool-item">
+          <img src="img/tools/google-sheets.png" alt="Google Sheets" class="essay-tool-icon">
+          <span class="essay-tool-name">Google Sheets</span>
+        </div>
+        <div class="essay-tool-item">
+          <img src="img/tools/facebook.svg" alt="Facebook Graph API" class="essay-tool-icon">
+          <span class="essay-tool-name">Facebook API</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="essay-tools-box">
+      <span class="essay-tools-box-label">Repository</span>
+      <div class="essay-tools-grid">
+        <a href="https://github.com/Tariq-15/russian-automation" target="_blank" rel="noopener noreferrer" class="essay-repo-link">
+          <svg viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true" focusable="false"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          <span>Tariq-15/russian-automation ↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="essay-body">
+
+      <p>
+        "বাংলায় রাশিয়ান" ("Russian, in Bangla") is a client's Facebook Page teaching Bengali speakers
+        Russian vocabulary through three daily carousel posts. Before this project, the client was
+        producing every one of those posts by hand.
+      </p>
+      <ul class="essay-list">
+        <li><strong>Morning</strong>, a five-word vocabulary poster</li>
+        <li><strong>Noon</strong>, a single Russian sentence with pronunciation and meaning</li>
+        <li><strong>Night</strong>, a four-option quiz on a word from earlier in the day</li>
+      </ul>
+      <p>
+        This is the story of how that became one n8n workflow that now runs unattended from nothing
+        but rows in a spreadsheet.
+      </p>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Problem</h2>
+      <ul class="essay-list">
+        <li>Every post needed the same shape, a title, Russian text, a Bengali translation, laid out on a branded 1080×1080 poster, designed by hand in an image editor</li>
+        <li>That did not scale to three posts a day, so timing drifted: a morning post might not go out until the afternoon</li>
+        <li>A missed day left no record anywhere except the client's own memory of "did I post that?"</li>
+        <li>No design team and no CMS behind it, just a spreadsheet and whatever time was left in the day</li>
+        <li>The brief: the whole loop, from a new word list to a published post, had to run without anyone sitting at a screen three times a day</li>
+      </ul>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Approach</h2>
+      <p>
+        Split the problem into three sheet tabs, Words, Sentence, Quiz, each feeding its own
+        HTML/CSS poster template, then built an n8n workflow, with Claude, around them:
+      </p>
+      <ul class="essay-list">
+        <li>Read the rows due for posting from the sheet</li>
+        <li>Fill each template's <code>{{PLACEHOLDER}}</code> tokens with that row's content</li>
+        <li>Render every slide to a PNG in a single headless Puppeteer session</li>
+        <li>Upload the images to the Facebook Page as unpublished photos through the Graph API<sup>1</sup></li>
+        <li>Stitch them into one scheduled carousel post</li>
+      </ul>
+
+      <figure class="essay-image-figure">
+        <img src="img/projects/russian-automation/n8n-workflow.png" alt="The n8n workflow canvas for the Russian Automation project" loading="lazy">
+        <span class="essay-image-caption">The full workflow in n8n, reading three sheet tabs, filling templates, rendering with Puppeteer and publishing to Facebook.</span>
+      </figure>
+
+      <div class="essay-figure">
+        <div class="essay-flow">
+          <span class="essay-flow-step ef-green">Google Sheets Row</span>
+          <span class="essay-flow-arrow">↓</span>
+          <span class="essay-flow-step ef-pink">n8n Workflow</span>
+          <span class="essay-flow-arrow">↓</span>
+          <span class="essay-flow-step ef-purple">Puppeteer Render</span>
+          <span class="essay-flow-arrow">↓</span>
+          <span class="essay-flow-step ef-blue">Facebook Graph API</span>
+        </div>
+        <span class="essay-figure-caption">One browser session, one API call, zero manual steps.</span>
+      </div>
+
+      <p>
+        The first template built was the Sentence poster, then it went out as an actual, live post.
+      </p>
+
+      <div class="essay-image-row">
+        <figure class="essay-image-figure">
+          <img src="img/projects/russian-automation/template-sentence.jpg" alt="The Sentence poster template with unfilled placeholder tokens" loading="lazy">
+          <span class="essay-image-caption">The Sentence template, built in HTML and CSS, tokens still unfilled.</span>
+        </figure>
+        <figure class="essay-image-figure">
+          <img src="img/projects/russian-automation/facebook-post-live.png" alt="The same template published live as a Facebook post" loading="lazy">
+          <span class="essay-image-caption">The same template, live as a published Facebook post.</span>
+        </figure>
+      </div>
+
+      <p>
+        The hardest part wasn't the Facebook API, it was the small stuff around it:
+      </p>
+      <ul class="essay-list">
+        <li>Google Sheets returns a date-formatted cell as a numeric day count rather than a string, so half the scheduled rows were silently skipped until an explicit serial-date parser was added</li>
+        <li>n8n's Windows file-access allowlist does a literal string match against backslash paths, so a forward slash anywhere in a file path made a read silently fail</li>
+        <li>The first version launched a fresh headless Chromium process per image, fine for one slide, but the ninth or tenth in a batch would just never come back</li>
+      </ul>
+      <p>
+        All three were the kind of bug you only find by watching a run fail quietly, rather than
+        assuming the log is telling you the whole story.
+      </p>
+
+      <p>
+        The Sentence template above is one of three. The other two, Quiz at night and Vocabulary
+        each morning, round out the rotation.
+      </p>
+
+      <div class="essay-image-row">
+        <figure class="essay-image-figure">
+          <img src="img/projects/russian-automation/template-quiz.jpg" alt="The Quiz poster template with unfilled placeholder tokens" loading="lazy">
+          <span class="essay-image-caption">The Quiz template, one Russian word with four Bengali options.</span>
+        </figure>
+        <figure class="essay-image-figure">
+          <img src="img/projects/russian-automation/template-words.jpg" alt="The Vocabulary poster template with unfilled placeholder tokens" loading="lazy">
+          <span class="essay-image-caption">The Vocabulary template, five words per post.</span>
+        </figure>
+      </div>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Outcome</h2>
+      <ul class="essay-stat-list">
+        <li><strong>3</strong> scheduled posts published a day, entirely unattended, from spreadsheet rows alone</li>
+        <li><strong>Zero</strong> manual image design or uploading once a row is filled in</li>
+        <li><strong>Self-diagnosing</strong> status, every row is written back as Posted or Failed with a reason, so a gap is visible immediately</li>
+        <li><strong>One task left</strong>, the client's only remaining job is writing new words, sentences and quiz questions into the sheet</li>
+      </ul>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">What I'd Do Differently</h2>
+      <ul class="essay-list">
+        <li>Build the date-serial handling and the Windows path handling in from the first draft, rather than discovering both in production; both were entirely predictable once I understood how Sheets and n8n actually behave</li>
+        <li>Design the retry path earlier: right now a failed row needs a manual glance at the Failed Reason column before it's reset to Pending; a self-healing retry for the obviously transient failures, a timed-out upload, say, would close the loop completely</li>
+      </ul>
+
+    </div>
+
+    <div class="essay-footnotes">
+      <p><sup>1</sup> All Facebook and n8n credentials live only in a local start script, never
+        inside the version-controlled workflow file.</p>
+    </div>
+
+    <hr class="essay-rule">
+
+    <div class="essay-footer">
+      <p>Delivered for a client's Bengali-language Russian-vocabulary Page, whose readers will likely
+        never know how the posters get made.</p>
+      <div class="essay-footer-links">
+        <a href="index.html#projects" class="text-link">← All Projects</a>
+        <a href="mailto:tariquzzaman01@gmail.com" class="text-link">Get in Touch ↗</a>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

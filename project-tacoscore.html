@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Python Project About Football Data Extraction, Md. Tariquzzaman</title>
+  <meta name="description"
+  content="Case study: TacosScore, a typed Python client and CLI for Sofascore's football analytics API, published on PyPI with sync/async clients, rate limiting, pandas export and 132+ tests.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+</head>
+
+<body>
+
+  <main class="essay-shell">
+
+    <div class="essay-topbar">
+      <a href="index.html#projects" class="essay-back">← All Projects</a>
+      <button class="essay-theme-btn" id="theme-toggle" aria-label="Toggle Theme" title="Toggle Light / Dark Mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="essay-meta">Open Source · 2026, Present</div>
+    <h1 class="essay-title">A Python Project About Football Data Extraction</h1>
+    <p class="essay-standfirst">
+      A typed Python client for Sofascore's football analytics API, dataclasses instead of raw JSON, a
+      CLI, sync and async clients, and enough anti-bot handling to actually stay up, published on PyPI.
+    </p>
+
+    <div class="essay-tools-box">
+      <span class="essay-tools-box-label">Tools Used</span>
+      <div class="essay-tools-grid">
+        <div class="essay-tool-item">
+          <img src="img/tools/python.svg" alt="Python" class="essay-tool-icon">
+          <span class="essay-tool-name">Python</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="essay-tools-box">
+      <span class="essay-tools-box-label">Package</span>
+      <div class="essay-tools-grid">
+        <a href="https://pypi.org/project/tacoscore/" target="_blank" rel="noopener noreferrer" class="essay-repo-link">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+            <line x1="12" y1="22.08" x2="12" y2="12" />
+          </svg>
+          <span>pypi.org/project/tacoscore ↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="essay-body">
+
+      <p>
+        Most of the projects in this list came out of a job needing something automated. TacosScore
+        didn't, it came out of wanting clean football data for my own analysis, and getting tired of
+        writing the same messy request-and-parse code against Sofascore's API every time I tried. So I
+        built the library I actually wanted, and published it, publicly, on PyPI.
+      </p>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Problem</h2>
+      <ul class="essay-list">
+        <li>Sofascore's API is undocumented, returns deeply nested, camelCase JSON, and can change shape
+          without notice, so every script ends up guessing at fields against raw dictionaries</li>
+        <li>Plain HTTP requests get blocked outright, Akamai's bot protection returns a 403 to anything
+          that doesn't look like a real browser</li>
+        <li>Nothing stops a naive script from hammering the API and getting rate-limited or banned mid
+          analysis, there's no built-in backoff to fall back on</li>
+        <li>Match and player data live behind dozens of separate endpoints, lineups, stats, incidents,
+          shot maps, heatmaps, so pulling one full match means stitching several calls together by hand
+          every time</li>
+      </ul>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Approach</h2>
+      <p>
+        TacosScore is a real, installable package (<code>pip install tacoscore</code>), not a personal
+        script, so it had to actually solve each of those problems, not just work on my machine once.
+      </p>
+      <ul class="essay-list">
+        <li><strong>Getting past the block</strong>, requests go through <code>curl_cffi</code> with
+          Chrome TLS impersonation, so they pass as a real browser instead of tripping Akamai's
+          protection</li>
+        <li><strong>Typed data, not JSON soup</strong>, every response is converted into typed Python
+          dataclasses with snake_case fields, so autocomplete and type checkers catch mistakes instead
+          of a <code>KeyError</code> at runtime</li>
+        <li><strong>Staying under the limit</strong>, built-in rate limiting and exponential backoff on
+          429 responses, configurable per client, so a long analysis run doesn't get itself blocked
+          halfway through</li>
+        <li><strong>One call for a whole match</strong>, <code>fetch_full_match()</code> orchestrates the
+          multi-endpoint pipeline itself, lineups, stats, incidents, shot maps, with intelligent
+          skipping, instead of the caller stitching endpoints together by hand</li>
+        <li><strong>Two ways to call it</strong>, a sync <code>TacosScoreClient</code> and an async
+          <code>AsyncTacosScoreClient</code>, plus a full interactive CLI with every major endpoint as
+          its own subcommand</li>
+        <li><strong>Ready for analysis, not just access</strong>, every model exports straight to a
+          pandas DataFrame via <code>.to_dataframe()</code>, and spatial data ships with StatsBomb
+          (120×80) and FIFA (105×68) pitch coordinate converters for anyone plotting heatmaps or shot
+          maps</li>
+      </ul>
+      <p>
+        132+ tests cover the parsers, the client, the CLI and the extraction rules, since a library other
+        people might actually install has a different bar than a script only I ever run.
+      </p>
+
+      <hr class="essay-rule">
+
+      <h2 class="essay-section-title">The Outcome</h2>
+      <ul class="essay-stat-list">
+        <li><strong>Published on PyPI</strong>, installable with a single <code>pip install</code>, MIT
+          licensed, versioned releases starting at 0.1.3</li>
+        <li><strong>132+ tests</strong>, covering parsers, clients, the CLI and extraction rules</li>
+        <li><strong>Full coverage</strong>, match metadata, lineups, team stats, incidents and shot maps,
+          player heatmaps and per-player shot maps, tournament and team/player profile data, all through
+          one typed interface</li>
+        <li><strong>Two interfaces, one library</strong>, a Python client for scripts and notebooks, and
+          a CLI for anyone who'd rather not write Python at all</li>
+      </ul>
+
+    </div>
+
+    <hr class="essay-rule">
+
+    <div class="essay-footnotes">
+      <p>TacosScore is not affiliated with Sofascore. The Sofascore API is undocumented and may change
+        without notice.</p>
+    </div>
+
+    <hr class="essay-rule">
+
+    <div class="essay-footer">
+      <p>Built and published independently, for football analysts who want typed data, not raw JSON
+        soup.</p>
+      <div class="essay-footer-links">
+        <a href="index.html#projects" class="text-link">← All Projects</a>
+        <a href="mailto:tariquzzaman01@gmail.com" class="text-link">Get in Touch ↗</a>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
