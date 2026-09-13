@@ -410,7 +410,7 @@ body {
 
 .timeline-item { border-top: 1px solid var(--border-color); padding: 20px 0; }
 .timeline-item:last-child { border-bottom: 1px solid var(--border-light); }
-.timeline-grid { display: grid; grid-template-columns: 140px 1fr auto; gap: 18px; align-items: start; }
+.timeline-grid { display: grid; grid-template-columns: 140px 1fr; gap: 18px; align-items: start; }
 @media (max-width: 640px) { .timeline-grid { grid-template-columns: 1fr; gap: 8px; } }
 .timeline-year { font-size: 14px; font-weight: 500; color: var(--text-secondary); }
 .timeline-role { font-size: 16px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; }
